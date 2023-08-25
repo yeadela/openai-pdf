@@ -21,7 +21,6 @@ from pdfai.summarize import summarize
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('views/', include('views.urls')),
     path('ask', chat),
     path('summary',summarize)
 ]
