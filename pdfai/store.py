@@ -1,5 +1,6 @@
 from langchain.document_loaders import TextLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
+from django.http import JsonResponse
 import hashlib
 import os
 from .helper import AppHelper
@@ -23,8 +24,8 @@ def add_embedding(fileurl):
         keys.append(hashKey)
         # doc.metadata ={"key":hashKey}
    store = AppHelper.store
-
    store.add_texts(texts = split_docs,keys = keys)
+   return JsonResponse({"data:":"add successful."})
 
 def get_all_embeddings():
      result = AppHelper.store.similarity_search(query="*")
@@ -38,6 +39,7 @@ def delete_embedding(keys):
                os.environ("AZURESEARCH_FIELDS_ID") :key
           })
      AppHelper.store.client.delete_documents(documents=docs)
+     return JsonResponse({"data:":"delete successful."})
 
 
 

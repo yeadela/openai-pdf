@@ -16,11 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path,include
-from pdfai.chat import chat
-from pdfai.summarize import summarize
+from pdfai import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ask', chat),
-    path('summary',summarize)
+    path('ask', views.chat),
+    path('summary',views.summarize)
 ]

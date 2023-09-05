@@ -14,7 +14,7 @@ import json
 from . import env
 from .helper import AppHelper
 
-def chat(request) :
+def chatPDF(request) :
     
     llm = ChatOpenAI(model_name = env.LLM_MODEL, temperature =0.0)
     chain = load_qa_chain(llm, chain_type="stuff")
