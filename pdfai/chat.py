@@ -21,7 +21,7 @@ def chatPDF(request) :
     
     query = json.loads(request.body).get("prompt")
     #"What is the collect stage of data maturity?"
-    docs = AppHelper.store.similarity_search(query)
+    docs = AppHelper.getStore().similarity_search(query)
     answer=chain.run(input_documents=docs, question=query)
     print(answer)
     return JsonResponse({"answer":answer})

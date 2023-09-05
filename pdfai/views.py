@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .chat import chatPDF
 from .summarize import summarize
-import store
+from . import store
 
 # Create your views here.
 
