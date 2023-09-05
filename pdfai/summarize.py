@@ -22,7 +22,7 @@ from sklearn.cluster import KMeans
 
 from django.http import JsonResponse
 def summarize(request) :
-    init()
+    # init()
     filePath="D:\\field-guide-to-data-science.pdf"
     loader = PyPDFLoader(filePath)
     pages = loader.load()
