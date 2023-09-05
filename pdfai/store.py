@@ -23,7 +23,7 @@ def add_embedding(fileurl):
         hashKey = hashlib.sha1(f'{fileurl}_{i}'.encode("utf-8")).hexdigest()
         keys.append(hashKey)
         # doc.metadata ={"key":hashKey}
-   store = AppHelper.store
+   store = AppHelper.getStore()
    store.add_texts(texts = split_docs,keys = keys)
    return JsonResponse({"data:":"add successful."})
 
@@ -38,7 +38,7 @@ def delete_embedding(keys):
                "@search.action":"delete",
                os.environ("AZURESEARCH_FIELDS_ID") :key
           })
-     AppHelper.store.client.delete_documents(documents=docs)
+     AppHelper.getStore().client.delete_documents(documents=docs)
      return JsonResponse({"data:":"delete successful."})
 
 
