@@ -28,7 +28,7 @@ def add_embedding(fileurl):
    return JsonResponse({"data:":"add successful."})
 
 def get_all_embeddings():
-     result = AppHelper.store.similarity_search(query="*")
+     result = AppHelper.getStore().similarity_search(query="*")
      return list(map(lambda x: x["metadata"].key,result))
 
 def delete_embedding(keys):
