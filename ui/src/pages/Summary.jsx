@@ -2,6 +2,7 @@ import { Button } from '@mui/material'
 import React, { useState } from 'react'
 import { summaryCompletion } from "../api/chat.api";
 import { toast } from "react-toastify";
+import Upload from '../components/Upload';
 
 export default function Summary() {
     const [summry, setSummary] = useState("");
@@ -17,6 +18,7 @@ export default function Summary() {
 
     return (
         <div>
+            <Upload />
             <Button onClick={createSummary}>Create Summary</Button>
             <div>{summry}</div>
         </div>

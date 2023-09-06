@@ -21,5 +21,6 @@ from pdfai import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('ask', views.chat),
-    path('summary',views.summarize)
+    path('summary',views.summarize),
+    path('upload',views.upload)
 ]

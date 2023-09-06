@@ -17,7 +17,7 @@ export default function Home() {
             <TabContext value={value}>
                 <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
                     <TabList onChange={handleChange} aria-label="lab API tabs example">
-                        <Tab label="Summary" value="1" />
+                        <Tab label="Upload & Summary" value="1" />
                         <Tab label="Ask" value="2" />
                     </TabList>
                 </Box>
