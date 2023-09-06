@@ -54,7 +54,7 @@ def extract_text_from_PDF(files):
 #         for page in pdf_reader.pages:
 #             text += page.extract_text()
      # single file
-     pdf_reader = PyPDfLoader(files)
+     pdf_reader = PyPDFLoader(files)
      for page in pdf_reader.pages:
           text += page.extract_text()
      return text

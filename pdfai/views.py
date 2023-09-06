@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .chat import chatPDF
 from .summarize import summarize
 from . import store
+from . import upload
 
 # Create your views here.
 
@@ -19,4 +20,7 @@ def get_all_embeddings(request):
 
 def delete_embedding(request):
     return store.delete_embedding()
+
+def upload(request):
+    return upload.upload(request)
     
