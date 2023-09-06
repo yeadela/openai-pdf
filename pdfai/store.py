@@ -5,7 +5,7 @@ import hashlib
 import os
 from .helper import AppHelper
 import re
-from langchain.document_loaders import PyPDfLoader
+from langchain.document_loaders import PyPDFLoader
 # import fitz # 一个用于处理PDF、XPS和其他文档格式的库
 # from PIL import Image
 
