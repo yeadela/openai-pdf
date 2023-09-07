@@ -17,8 +17,8 @@ def init():
     print("---initiallizing start---")
     # init for openai(openai embedding, openai chat)
     os.environ["OPENAI_API_TYPE"] = "azure"
-    os.environ["OPENAI_API_KEY"] ="0fae934ef46b94d1a6a3bb0feecb11a3"
-    os.environ["OPENAI_API_BASE"] ="http://flag.smarttrot.com/index.php/api/v1" #https://<your-endpoint.openai.azure.com/
+    os.environ["OPENAI_API_KEY"] ="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"
+    #os.environ["OPENAI_API_BASE"] ="http://flag.smarttrot.com/index.php/api/v1" #https://<your-endpoint.openai.azure.com/
     # os.environ["OPENAI_API_VERSION"] = "2023-03-15-preview"
 
     #init for azure serach
