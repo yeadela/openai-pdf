@@ -1,8 +1,8 @@
 from .env import init
 from langchain import PromptTemplate
 from django.http import JsonResponse
-from azureBlob import AzureBlobStorageClient
-from store import extract_text_from_PDF, add_embedding
+from .azureBlob import AzureBlobStorageClient
+from .store import extract_text_from_PDF, add_embedding
 import re
 def upload(request) :
     # save file to blob
