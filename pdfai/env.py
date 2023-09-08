@@ -16,15 +16,15 @@ LLM_MODEL = 'gpt-3.5-turbo'
 def init():
     print("---initiallizing start---")
     # init for openai(openai embedding, openai chat)
-    os.environ["OPENAI_API_TYPE"] = "azure"
-    os.environ["OPENAI_API_KEY"] ="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"
+    # os.environ["OPENAI_API_TYPE"] = "azure"
+    os.environ["OPENAI_API_KEY"] ="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"
     #os.environ["OPENAI_API_BASE"] ="http://flag.smarttrot.com/index.php/api/v1" #https://<your-endpoint.openai.azure.com/
     # os.environ["OPENAI_API_VERSION"] = "2023-03-15-preview"
 
     #init for azure serach
-    os.environ["AZURE_SEARCH_ENDPOINT"]="YOUR END POINT"
-    os.environ["AZURE_SERACH_INDEX_NAME"]="YOUR INDEX NAME"
-    os.environ["AZURE_SERACH_API_KEY"]="YOUR API KEY"
+    os.environ["AZURE_SEARCH_ENDPOINT"]="https://star5search.search.windows.net"
+    os.environ["AZURE_SERACH_INDEX_NAME"]="star5index"
+    os.environ["AZURE_SERACH_API_KEY"]="Cw5EBUxaizS4jBFbFdQvohEOSaNCHO3PXC17u6GQy8AzSeDRVUOZ"
     os.environ["AZURESEARCH_FIELDS_ID"] ="id"
 
  
