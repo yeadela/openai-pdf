@@ -10,10 +10,12 @@ from langchain.text_splitter import CharacterTextSplitter
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.question_answering import load_qa_chain
 import json
+import os
 
 def chat(request) :
     init()
-    filePath="D:\\field-guide-to-data-science.pdf"
+    current_path = os.path.abspath(os.path.dirname(__file__))
+    filePath=current_path+"/sicence.pdf"
     load = PyPDFLoader(filePath)
     data = load.load()
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=0)

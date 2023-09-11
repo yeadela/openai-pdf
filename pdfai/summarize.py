@@ -19,11 +19,13 @@ from langchain.chains.summarize import load_summarize_chain
 # Data Science
 import numpy as np
 from sklearn.cluster import KMeans
+import os
 
 from django.http import JsonResponse
 def summarize(request) :
     init()
-    filePath="D:\\field-guide-to-data-science.pdf"
+    current_path = os.path.abspath(os.path.dirname(__file__))
+    filePath=current_path+"/sicence.pdf"
     loader = PyPDFLoader(filePath)
     pages = loader.load()
 
@@ -48,7 +50,7 @@ def summarize(request) :
     # Choose the number of clusters, this can be adjusted based on the book's content.
     # I played around and found ~10 was the best.
     # Usually if you have 10 passages from a book you can tell what it's about
-    num_clusters = 11
+    num_clusters = 3
 
     # Perform K-means clustering
     kmeans = KMeans(n_clusters=num_clusters, random_state=42).fit(vectors)
@@ -99,7 +101,7 @@ def summarize(request) :
     summaries = "\n".join(summary_list)
 
     # Convert it back to a document
-    summaries = Document(page_content=summaries)
+    #summaries = Document(page_content=summaries)
 
-    print (f"Your total summary has {llm3.get_num_tokens(summaries.page_content)} tokens")
-    return JsonResponse({"data":summaries.to_json()})
+    #print (f"Your total summary has {llm3.get_num_tokens(summaries.page_content)} tokens")
+    return JsonResponse({"data":summaries})

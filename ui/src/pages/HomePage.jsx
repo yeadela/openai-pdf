@@ -77,7 +77,7 @@ const HomePage = () => {
       justifyContent="space-between"
       sx={{ height: "100%" }}
     >
-      <Header bg borderBottom>
+      {/* <Header bg borderBottom>
         <Box sx={{
           width: "100%",
           height: "100%",
@@ -109,16 +109,16 @@ const HomePage = () => {
             <LogoutOutlinedIcon />
           </IconButton>
         </Box>
-      </Header>
+      </Header> */}
 
       <Box ref={chatWrapperRef} sx={{
         height: "100%",
-        position: "fixed",
+        // position: "fixed",
         zIndex: 1,
         maxWidth: "md",
         width: "100%",
         overflowY: "auto",
-        paddingTop: "60px",
+        paddingTop: "10px",
         paddingBottom: "90px",
         "&::-webkit-scrollbar": {
           width: "0px"

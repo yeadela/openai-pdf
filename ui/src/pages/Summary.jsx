@@ -2,6 +2,7 @@ import { Button } from '@mui/material'
 import React, { useState } from 'react'
 import { summaryCompletion } from "../api/chat.api";
 import { toast } from "react-toastify";
+import { Box } from "@mui/material";
 
 export default function Summary() {
     const [summry, setSummary] = useState("");
@@ -18,7 +19,12 @@ export default function Summary() {
     return (
         <div>
             <Button onClick={createSummary}>Create Summary</Button>
-            <div>{summry}</div>
+            <div style={{
+                border: "1px solid #ddd",
+                width: "600px",
+                height: "200px",
+                overflow: "auto"
+            }}>{summry}</div>
         </div>
 
     )
