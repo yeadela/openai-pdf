@@ -47,8 +47,11 @@ def chat(request) :
     docsearch = Pinecone.from_existing_index(index_name=index_name,embedding=embed)
     llm = OpenAI(temperature=0)
     chain = load_qa_chain(llm, chain_type="stuff")
-    
-    query = json.loads(request.body).get("prompt")
+    if request.method =='GET':
+        query = request.GET.get("prompt")
+    else:
+        query = json.loads(request.body).get("prompt")
+    #query = json.loads(request.body).get("prompt")
     #"What is the collect stage of data maturity?"
     docs = docsearch.similarity_search(query)
     answer=chain.run(input_documents=docs, question=query)
