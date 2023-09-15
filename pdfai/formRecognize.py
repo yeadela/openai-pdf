@@ -7,9 +7,10 @@ from azure.cosmos import CosmosClient
 import openai
 import os
 import time
-from . import env
+from env import init
 
-env.init()
+init()
+openai.api_key="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"
 def generate_embeddings(text):
     '''
     Generate embeddings from string of text.
@@ -18,7 +19,7 @@ def generate_embeddings(text):
     response = openai.Embedding.create(
         input=text, engine="text-embedding-ada-002")
     embeddings = response['data'][0]['embedding']
-    time.sleep(0.5) # rest period to avoid rate limiting on AOAI for free tier
+    time.sleep(20) # rest period to avoid rate limiting on AOAI for free tier
     return embeddings
 
 def upload():
@@ -58,7 +59,7 @@ def upload():
     # result = poller.result()
     # res_dict = [item.to_dict() for item in result.key_value_pairs]
 
-    rs =[{"id":"6", "name":'Jake',"shares2":"100"},{"id":"7", "name":'Jake',"shares2":"200"},{"id":"8","keyvalue":"Jake Lucy", "name":'Lucy',"shares2":"300"}]
+    rs =[{"id":"9", "name":'Jake',"shares":"100"},{"id":"7", "name":'Jake',"shares":"200"},{"id":"8","keyvalue":"Jake Lucy", "name":'Lucy',"shares":"300"}]
   
     #write to cosmos db
     cosmos_client = CosmosClient(os.environ.get("COSMOS_URL"),os.environ.get("COSMOS_KEY"))
@@ -66,7 +67,7 @@ def upload():
     container = database.get_container_client(os.environ.get("COSMOS_DB_CONTAINER"))
     for item in rs:
       item["namevector"] =generate_embeddings(item["name"])
-      item["sharevector"] =generate_embeddings(item["shares2"])
+      item["sharevector"] =generate_embeddings(item["shares"])
       item['@search.action'] = 'upload'
       container.create_item(body = item)
     item = container.query_items(query ="SELECT * FROM r WHERE r.id=@id", parameters=[{"name":"@id","value":"1"}],enable_cross_partition_query=True)

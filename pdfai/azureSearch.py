@@ -20,15 +20,15 @@ from azure.search.documents.indexes.models import (
     SemanticField,
     SemanticSettings,
     VectorSearch,
-    VectorSearchAlgorithmConfiguration,
+    #VectorSearchAlgorithmConfiguration,
     SearchIndexerDataSourceConnection
 )
-from .formRecognize import generate_embeddings
+from formRecognize import generate_embeddings
 
 service_name = "star5search"
 admin_key = "utPRwPzFAkvxgVAUwNXLQL2HhDvZ1QJOM9EiCkRxS4AzSeAknfs0"
 
-index_name = "star5searchindex"
+index_name = "star5searchindex1"
 
 # Create an SDK client
 endpoint = "https://{0}.search.windows.net/".format(service_name)
@@ -37,7 +37,7 @@ def vector_search(query):
     search_client = SearchClient(endpoint, index_name, AzureKeyCredential(admin_key))  
     results = search_client.search(  
         search_text="",  
-        vector=Vector(value=generate_embeddings(query), k=3),  
+        vectors=[Vector(value=generate_embeddings(query), k=3,fields="namevector")],  
         include_total_count=True, query_type="full",semantic_configuration_name="my-semantic-cfg"
        # select=["title", "content", "category"] 
     )
@@ -96,7 +96,7 @@ search_client = SearchClient(endpoint=endpoint,
 #delete index first, then you can create again
 #deleteIndex()
 
-results = vector_search("How many shares Jake have?")
+results = vector_search("How many shares Lucy have?")
 # results2 = search_client.autocomplete(search_text="shares",suggester_name="testdbtable")
 
 
@@ -106,7 +106,7 @@ results = vector_search("How many shares Jake have?")
 # for result in results2:
 #     print (result['text'],"===",result)
 # print("-------------------------------")
-print ('Total Documents Matching Query:', results.get_count(), results)
+print ('Total Documents Matching Query:', results)
 for result in results:
     #print(result)
     print("{}: {}".format(result["name"], result["shares"]))
@@ -119,3 +119,5 @@ for result in results:
 #         print ('Index', index_name, 'Deleted')
 #     except Exception as ex:
 #         print (ex)
+# for i, item in enumerate(results):
+#     print(i,item)
