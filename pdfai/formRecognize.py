@@ -8,9 +8,11 @@ import openai
 import os
 import time
 from env import init
-
+from langchain import OpenAI, SQLDatabase
+from langchain_experimental.sql import SQLDatabaseChain
+from langchain.memory import CosmosDBChatMessageHistory
 init()
-openai.api_key="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"
+#openai.api_key="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"
 def generate_embeddings(text):
     '''
     Generate embeddings from string of text.
@@ -65,15 +67,19 @@ def upload():
     cosmos_client = CosmosClient(os.environ.get("COSMOS_URL"),os.environ.get("COSMOS_KEY"))
     database = cosmos_client.get_database_client(database=os.environ.get("COSMOS_DB_NAME"))
     container = database.get_container_client(os.environ.get("COSMOS_DB_CONTAINER"))
-    for item in rs:
-      item["namevector"] =generate_embeddings(item["name"])
-      item["sharevector"] =generate_embeddings(item["shares"])
-      item['@search.action'] = 'upload'
-      container.create_item(body = item)
-    item = container.query_items(query ="SELECT * FROM r WHERE r.id=@id", parameters=[{"name":"@id","value":"1"}],enable_cross_partition_query=True)
-    print(item)
-    for i, r in enumerate(item):
-        print(r)
+    db = SQLDatabase.from_uri("mysql+pymysql://root:123456@127.0.0.1/openai")
+    llm = OpenAI(temperature=0)
+    db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=True)
+    db_chain.run("How many pepole are there?")
+    # for item in rs:
+    #   item["namevector"] =generate_embeddings(item["name"])
+    #   item["sharevector"] =generate_embeddings(item["shares"])
+    #   item['@search.action'] = 'upload'
+    #   container.create_item(body = item)
+    # item = container.query_items(query ="SELECT * FROM r WHERE r.id=@id", parameters=[{"name":"@id","value":"1"}],enable_cross_partition_query=True)
+    # print(item)
+    # for i, r in enumerate(item):
+    #     print(r)
 
 def test():
     os.environ["STORAGE_ACCOUNT"] ="star5storageaccount"

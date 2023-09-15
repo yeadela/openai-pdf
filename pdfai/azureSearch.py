@@ -24,7 +24,8 @@ from azure.search.documents.indexes.models import (
     SearchIndexerDataSourceConnection
 )
 from formRecognize import generate_embeddings
-
+from langchain import OpenAI, SQLDatabase
+from langchain_experimental.sql import SQLDatabaseChain
 service_name = "star5search"
 admin_key = "utPRwPzFAkvxgVAUwNXLQL2HhDvZ1QJOM9EiCkRxS4AzSeAknfs0"
 
