@@ -24,39 +24,8 @@ def init():
     #init for azure serach
     os.environ["AZURE_SEARCH_ENDPOINT"]="https://star5search.search.windows.net"
     os.environ["AZURE_SERACH_INDEX_NAME"]="star5index"
-    os.environ["AZURE_SERACH_API_KEY"]="Cw5EBUxaizS4jBFbFdQvohEOSaNCHO3PXC17u6GQy8AzSeDRVUOZ"
-    os.environ["AZURESEARCH_FIELDS_ID"] ="id"
+    os.environ["AZURE_SERACH_ADMIN_KEY"]="Cw5EBUxaizS4jBFbFdQvohEOSaNCHO3PXC17u6GQy8AzSeDRVUOZ"
+    os.environ["AZURE_SERACH_INDEXER"] ="star5-cosmosdb-indexer"
 
- 
-
-    # pinecone.init(
-    #     api_key="ec70078b-04f8-4d91-8ebc-98ad36e923c1",
-    #     environment="asia-southeast1-gcp-free"
-    # )
-    # init_index()
-    
-# def init_index():
-#     if PINECONE_INDEX_NAME not in pinecone.list_indexes():
-#         pinecone.create_index(name = PINECONE_INDEX_NAME,dimension = 1536,metric='cosine')
-#     else:
-#         filePath ="D:\\field-guide-to-data-science.pdf"
-#         loader = PyPDFLoader(filePath)
-#         docs = loader.load()
-#         text_splitter = RecursiveCharacterTextSplitter(
-#             chunk_size = 2000, 
-#             chunk_overlap = 0,
-#            # length_function = tiktoken_len
-#            # separators= ["\n\n","\n"]
-#         )
-#         split_docs = text_splitter.split_documents(docs)
-
-#         Pinecone.from_documents(split_docs,OpenAIEmbeddings(model = EMBEDDING_MODEL), index_name = PINECONE_INDEX_NAME)
-
-
-# def tiktoken_len(text):  
-#     tokens = tokenizer.encode(
-#         text,
-#         disallowed_special=()
-#     )
-#     return len(tokens)
-    
+    #---------------------sql database -----------------------
+    os.environ["DB_CONNECT_STR"] ="mssql+pymssql://e515962:%^TYGH78uijk@star5sqldbserver.database.windows.net/star5sqldatabase"

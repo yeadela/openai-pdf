@@ -3,8 +3,15 @@ from .chat import chatPDF
 from .summarize import summarize
 from . import store
 from . import upload
+from .llmRequest import parseLLMRequest
+from .azureSearch import cognitiveSearch
 
 # Create your views here.
+def llmRequest(request):
+    return parseLLMRequest(request)
+
+def cognitiveSearch(request):
+    return cognitiveSearch(request)
 
 def chat(request):
     return chatPDF(request)

@@ -73,10 +73,23 @@ WSGI_APPLICATION = 'mypy.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'mssql',
+        'NAME': 'star5sqldatabase',
+        'USER': 'e515962',
+        'PASSWORD': '%^TYGH78uijk',
+        'HOST': 'star5sqldbserver.database.windows.net',
+        'PORT': '1433',
+        'OPTION': {
+            'driver':'ODBC Driver 17 for SQL Server',
+        }
     }
 }
 
