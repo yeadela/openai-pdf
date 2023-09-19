@@ -28,4 +28,12 @@ def init():
     os.environ["AZURE_SERACH_INDEXER"] ="star5-cosmosdb-indexer"
 
     #---------------------sql database -----------------------
-    os.environ["DB_CONNECT_STR"] ="mssql+pymssql://e515962:%^TYGH78uijk@star5sqldbserver.database.windows.net/star5sqldatabase"
+    #os.environ["DB_CONNECT_STR"] ="mssql+pymssql://e515962:%^TYGH78uijk@star5sqldbserver.database.windows.net/star5sqldatabase"
+    os.environ["DB_CONNECT_STR"] ="mysql+pymysql://root:123456@127.0.0.1/openai"
+
+
+
+ #---------------------blob storage -----------------------
+    os.environ["STORAGE_ACCOUNT"] =""
+    os.environ["STORAGE_CONTAINER"] =""
+    os.environ["STORAGE_KEY"] = ""

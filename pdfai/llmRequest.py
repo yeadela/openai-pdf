@@ -7,7 +7,6 @@ from django.http import JsonResponse
 
 def parseLLMRequest(request):
     db = SQLDatabase.from_uri(os.environ.get("DB_CONNECT_STR"))
-  
     llm = OpenAI(temperature=0)
     db_chain = SQLDatabaseChain(llm=llm, database=db, verbose=True)
     query = getReqParamValue(request,"prompt")

@@ -18,7 +18,7 @@ def cognitiveSearch(request):
                       credential=AzureKeyCredential(admin_key))
     results = search_client.search(getReqParamValue(request,"search_text"),search_mode='all',include_total_count=True)
     print ('Total Documents Matching Query:', results)
-    return JsonResponse(BaseResponse(1,results))
+    return BaseResponse.success(results)
 
 def pullDataFromDb():
     indexer_client = SearchIndexerClient(endpoint, AzureKeyCredential(admin_key))
