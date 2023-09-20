@@ -1,40 +1,35 @@
-import pandas as pd  
+from reportlab.pdfgen import canvas  
+from reportlab.lib.pagesizes import letter  
 import matplotlib.pyplot as plt  
-from matplotlib.backends.backend_pdf import PdfPages 
-import shutil
+import pandas as pd
 import os
-# 用pandas创建一个简单的数据集  
-'''
-data = {'Year': [2016, 2017, 2018, 2019, 2020],  
-        'Sales': [15000, 17000, 14500, 16000, 18000]}  
-df = pd.DataFrame(data)  
+import shutil
+'''  
+# 创建数据  
+data = {'A': [25, 34, 32], 'B': [20, 31, 29], 'C': [18, 33, 27]}  
+df = pd.DataFrame(data, index=['X', 'Y', 'Z'])  
   
-# 用matplotlib创建折线图  
-plt.figure(figsize=(10,5))  
-plt.plot(df['Year'], df['Sales'], marker='o')  
-plt.title('Bar')  
-labels = list(data.keys())
-plt.xlabel(labels[0])  
-plt.ylabel(labels[1])  
-  
-# 把这个折线图保存为一个PDF文件  
-with PdfPages('sales_over_years.pdf') as pdf:  
-    pdf.savefig(plt.gcf())
+# 创建PDF文件并绘制条形图  
+c = canvas.Canvas("output.pdf", pagesize=letter)  
+fig, ax = plt.subplots()  
+df.plot(kind='bar', ax=ax)  
+plt.savefig('bar_plot.png')  # 将图像保存到文件  
+c.drawImage('bar_plot.png', 50, 500, 600, 400)  # 将图像插入到PDF文件中  
+c.showPage()  
+c.save()
 '''
+
 def data_to_bar(data,file_name,target_path):
-    df = pd.DataFrame(data)  
-    plt.figure(figsize=(10,5)) 
-    labels = list(data.keys()) 
-    plt.plot(df[labels[0]], df[labels[1]], marker='o')  
-    plt.title('Bar')  
-    labels = list(data.keys())
-    plt.xlabel(labels[0])  
-    plt.ylabel(labels[1])  
-    
-    # 把这个折线图保存为一个PDF文件  
-    with PdfPages(file_name) as pdf:  
-        pdf.savefig(plt.gcf())
-    # 定义源文件和目标路径  
+    df = pd.DataFrame(data, index=['X', 'Y', 'Z'])
+    c = canvas.Canvas(file_name, pagesize=letter)
+    fig, ax = plt.subplots()  
+    df.plot(kind='bar', ax=ax)  
+    plt.savefig('bar_plot.png')  # 将图像保存到文件  
+    c.drawImage('bar_plot.png', 50, 500, 600, 400)  # 将图像插入到PDF文件中  
+    c.showPage()
+    os.remove('./bar_plot.png')  
+    c.save()   
+
     source_file = './'+file_name  
 #       target_path = 'E://AzureFolder//test'  
     file_name = os.path.basename(file_name)  # 获取源文件的文件名  
@@ -46,8 +41,7 @@ def data_to_bar(data,file_name,target_path):
 # 使用shutil.move来移动文件  
     shutil.move(source_file, target_path)
 
-data = {'Year': [20160, 20170, 20180, 20190, 20200],  
-        'Sales': [15000, 17000, 14500, 16000, 18000]}      
-file_name = 'bar2.pdf'
+data = {'A': [25, 34, 32], 'B': [20, 31, 29], 'C': [18, 33, 27]}  
+file_name = 'line.pdf'
 path = 'E://AzureFolder//test'
 data_to_bar(data, file_name, path)
