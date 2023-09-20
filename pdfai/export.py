@@ -36,26 +36,8 @@ def export_excel(df,target_path='share.xlsx'):
     df.to_excel(target_path, index=False)  
 
 
-def export_json(dt):  
-    # 连接到数据库  
-    conn = sqlite3.connect('example.db')  
-    conn.row_factory = sqlite3.Row  # 这将使你可以通过列名访问数据  
-    cursor = conn.cursor()  
-  
-    # 执行查询  
-    cursor.execute(query)  
-  
-    # 获取查询结果  
-    results = cursor.fetchall()  
-  
-    # 将结果转换为字典列表，其中每个字典代表一行数据  
-    data = [dict(row) for row in results]  
-  
-    # 将数据转换为JSON格式并返回  
-    json_data = json.dumps(data)  
-    with open('shares.json', 'w') as f:  
-      json.dump(json_data, f)  
-    print(json_data)
+def export_json(df):  
+    df.to_json('data.json')
 
 
 def data_to_pie(df,file_name,target_path = './mypy//'):
@@ -79,9 +61,9 @@ def data_to_pie(df,file_name,target_path = './mypy//'):
           os.remove(target_file)  # 删除目标文件 
   
 # 使用shutil.move来移动文件  
-      shutil.move(source_file, target_path= './mypy//)
+      shutil.move(source_file, target_path)
 
-def data_to_line(data,file_name,target_path):
+def data_to_line(data,file_name,target_path= './mypy//'):
     df = pd.DataFrame(data)  
     plt.figure(figsize=(10,5)) 
     labels = list(data.keys()) 
@@ -107,7 +89,7 @@ def data_to_line(data,file_name,target_path):
     shutil.move(source_file, target_path)
 
 
-def data_to_bar(data,file_name,target_path= './mypy//):
+def data_to_bar(data,file_name,target_path= './mypy//'):
     df = pd.DataFrame(data, index=['X', 'Y', 'Z'])
     c = canvas.Canvas(file_name, pagesize=letter)
     fig, ax = plt.subplots()  
