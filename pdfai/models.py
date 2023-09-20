@@ -36,9 +36,27 @@ class Trades(models.Model):
     local_currency = models.CharField(max_length=100,null=True)
     order_client_name = models.CharField(max_length=100,null=True)
     ex_rate = models.CharField(max_length=100,null=True)
-    file_ref = models.CharField(max_length=300,null=True)
+    # file_ref = models.CharField(max_length=300,null=True)
     class Meta:
         db_table = 'trades'
     def toJSON(self):
         return json.dumps(dict([(attr, getattr(self, attr)) for attr in [f.name for f in self._meta.fields]]))
+
+
+class Workflow(models.Model):
+    order_num = models.IntegerField()
+    work_flow_id = models.IntegerField(default=0)
+    work_flow_name = models.CharField(max_length=100)
+    work_flow_desc = models.CharField(max_length=500, null=True)
+    lib_id = models.IntegerField()
+    class Meta:
+        db_table = 'work_flow'
+
+class Libs(models.Model):
+    lib_id = models.AutoField(primary_key=True)
+    lib_name = models.CharField(max_length=500)
+    lib_func = models.CharField(max_length=500)
+    lib_type = models.CharField(max_length=100, null=True)
+    class Meta:
+        db_table = 'libs'
     

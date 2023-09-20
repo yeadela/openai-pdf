@@ -10,29 +10,54 @@ from .models import Trades
 from .handle import *
 
 @transaction.atomic
-def read_file(file,rule_id, table_name, ref):
-    # df = pd.read_excel(file)
-    if file.name.endswith('xlsx'):
-        df = pd.read_excel(file)
-    elif file.name.endswith('csv'):
-        df = pd.read_csv(file)
-    elif file.name.endswith('json'):
-        df = pd.read_json(file)
+def read_file(file,rule_id, table_name):
+    df = pd.read_excel(file)
+    # if file.name.endswith('xlsx'):
+    #     df = pd.read_excel(file)
+    # elif file.name.endswith('csv'):
+    #     df = pd.read_csv(file)
+    # elif file.name.endswith('json'):
+    #     df = pd.read_json(file)
     df = df.fillna("null-tag")
     rm = RuleMapping.objects.filter(rule_id = rule_id)
    
     for index, row in df.iterrows(): 
             md = Trades() if table_name == None else Trades()
             for item in rm:
+                src_val = row.get(item.source_column) if row.get(item.source_column) !="null-tag" else None
                 if item.handler != None:
-                    src_val = row.get(item.source_column) if row.get(item.source_column) !="null-tag" else None
                     dest_val = eval(item.handler)(src_val)
+                else:
+                    dest_val = src_val
                 print("---item---",row.get(item.source_column))
                 setattr(md,item.dest_column, dest_val)
-            setattr(md,item.file_ref, ref) # can download using this link
+            # setattr(md,item.file_ref, ref) # can download using this link
             md.save()
 
     return BaseResponse.success()
+
+def mappingtransfer(df,rule_id):
+    df = df.fillna("null-tag")
+    rm = RuleMapping.objects.filter(rule_id = rule_id)
+    columns = df.columns.values.tolist()#list(df)
+    new_columns =[]
+    for index, row in df.iterrows(): 
+            for item in rm:
+                if index == 0:
+                    for val in columns:
+                        if val==item.source_column:
+                            new_columns.append(item.dest_column)
+                            break
+                        else:
+                            continue
+            
+                if item.handler != None:
+                    src_val = row.get(item.source_column) if row.get(item.source_column) !="null-tag" else None
+                    dest_val = eval(item.handler)(src_val)
+                    row[item.source_column] = dest_val
+
+    df = df.set_axis(new_columns, axis='columns')  #rename  
+    return df
 
 def uploadFiles(request):
     rule_id = request.POST["rule_id"]
@@ -57,5 +82,5 @@ def uploadFiles1(request):
     base_path = os.path.join(file_path, 'data.xlsx')
     # df = pd.read_excel(file) 
    
-    return read_file(base_path, 1, 'trades')
+    return read_file(base_path, 6, 'trades')
 
