@@ -36,6 +36,7 @@ class Trades(models.Model):
     local_currency = models.CharField(max_length=100,null=True)
     order_client_name = models.CharField(max_length=100,null=True)
     ex_rate = models.CharField(max_length=100,null=True)
+    file_ref = models.CharField(max_length=300,null=True)
     class Meta:
         db_table = 'trades'
     def toJSON(self):

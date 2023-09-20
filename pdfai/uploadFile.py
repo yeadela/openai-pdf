@@ -10,12 +10,14 @@ from .models import Trades
 from .handle import *
 
 @transaction.atomic
-def read_file(file,rule_id, table_name):
+def read_file(file,rule_id, table_name, ref):
     # df = pd.read_excel(file)
     if file.name.endswith('xlsx'):
         df = pd.read_excel(file)
     elif file.name.endswith('csv'):
         df = pd.read_csv(file)
+    elif file.name.endswith('json'):
+        df = pd.read_json(file)
     df = df.fillna("null-tag")
     rm = RuleMapping.objects.filter(rule_id = rule_id)
    
@@ -27,6 +29,7 @@ def read_file(file,rule_id, table_name):
                     dest_val = eval(item.handler)(src_val)
                 print("---item---",row.get(item.source_column))
                 setattr(md,item.dest_column, dest_val)
+            setattr(md,item.file_ref, ref) # can download using this link
             md.save()
 
     return BaseResponse.success()
@@ -34,6 +37,7 @@ def read_file(file,rule_id, table_name):
 def uploadFiles(request):
     rule_id = request.POST["rule_id"]
     file = request.POST["file"]
+    # file = request.FILES.get("file")
     table_name = request.POST["table_name"]
      # #store file to blob storage
     storage_account_url = f'https://{os.environ.get("STORAGE_ACCOUNT")}.blob.core.windows.net'
@@ -44,7 +48,7 @@ def uploadFiles(request):
 
     ref = f'{storage_account_url}/{storage_container}/' + file.filename
     file.seek(0,0)
-    return read_file(file,rule_id, table_name)
+    return read_file(file,rule_id, table_name,ref)
 
     
 
