@@ -7,13 +7,15 @@ import os
 import json  
 from reportlab.pdfgen import canvas  
 from reportlab.lib.pagesizes import letter  
+from django.db import connection
   
-def query_to_excel(query, db_path, target_path='share.xlsx'):  
+def getDataFromDb(query=None):  
     # 连接到SQLite数据库  
-    conn = sqlite3.connect(db_path)  
-    cursor = conn.cursor()  
+    # conn = sqlite3.connect(db_path)  
+    cursor = connection.cursor()  
   
     # 执行查询  
+    query = "select * from trades"
     cursor.execute(query)  
   
     # 获取查询结果  
@@ -23,13 +25,18 @@ def query_to_excel(query, db_path, target_path='share.xlsx'):
     df = pd.DataFrame(results, columns=[column[0] for column in cursor.description])  
   
     # 将DataFrame保存为Excel文件  
-    df.to_excel(target_path, index=False)  
+    # df.to_excel(target_path, index=False)  
   
     # 关闭数据库连接  
-    conn.close()  
+    connection.close()  
+    return df
 
 
-def query_to_json(query):  
+def export_excel(df,target_path='share.xlsx'):
+    df.to_excel(target_path, index=False)  
+
+
+def export_json(dt):  
     # 连接到数据库  
     conn = sqlite3.connect('example.db')  
     conn.row_factory = sqlite3.Row  # 这将使你可以通过列名访问数据  
@@ -51,8 +58,8 @@ def query_to_json(query):
     print(json_data)
 
 
-def data_to_pie(data,file_name,target_path = './mypy//'):
-      df = pd.DataFrame.from_dict(data, orient='index', columns=['value'])  
+def data_to_pie(df,file_name,target_path = './mypy//'):
+      df = df.from_dict(orient='index', columns=['value'])  
       fig, ax = plt.subplots() 
       ax.pie(df['value'], labels=df.index, autopct='%1.1f%%', startangle=90)  
       ax.axis('equal')
