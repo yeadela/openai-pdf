@@ -2,6 +2,8 @@
 """Django's command-line utility for administrative tasks."""
 import os
 import sys
+from django.db import connection
+from django import db
 
 
 def main():
@@ -16,7 +18,13 @@ def main():
             "forget to activate a virtual environment?"
         ) from exc
     execute_from_command_line(sys.argv)
+    # my_custom_sql()
 
+def my_custom_sql():
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT count(*) FROM rule_rfrnc ")
+        row = cursor.fetchone()
+    print("------row---",row) 
 
 if __name__ == '__main__':
     main()
