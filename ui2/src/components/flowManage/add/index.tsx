@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -43,7 +43,7 @@ const getId = () => {
   return `${id}`;
 };
 
-const SmoothTransition = forwardRef(() => {
+const SmoothTransition = () => {
   const reactFlowWrapper = useRef(null);
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
@@ -168,10 +168,13 @@ const SmoothTransition = forwardRef(() => {
 
   const { setViewport } = useReactFlow();
   setViewport({ x: 0, y: 0, zoom: 1 });
-
+  const setFlow = (flow) => {
+    setNodes(flow.nodes);
+    setEdges(flow.edges);
+  }
   return (
     <>
-      <FlowBtn nodes={nodes} edges={edges} />
+      <FlowBtn nodes={nodes} edges={edges} setFlow={setFlow} />
       <div className="dndflow">
         <Sidebar />
         <div className="reactflow-wrapper" ref={reactFlowWrapper}>
@@ -202,26 +205,23 @@ const SmoothTransition = forwardRef(() => {
       </div>
     </>
   );
-});
+};
 
-const AddFlow = (props, ref) => {
-  const childRef = useRef()
-  useImperativeHandle(ref, () => ({
-    childRef
-  }));
-  // const { query } = props;
-  // if (query.id) {
-  // initialNodes = listNodes;
-  // initialEdges = listEdges;
+const AddFlow = (props) => {
+
+  // const { data } = props;
+  // if (data) {
+  // initialNodes = data.nodes;
+  // initialEdges = data.edges;
   // } else {
   initialNodes = oldNodes;
   initialEdges = [];
   // }
   return (
     <ReactFlowProvider>
-      <SmoothTransition ref={childRef} />
+      <SmoothTransition />
     </ReactFlowProvider>
   );
 };
 
-export default forwardRef(AddFlow);
+export default AddFlow;

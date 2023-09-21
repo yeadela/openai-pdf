@@ -11,7 +11,7 @@ export type TableListItem = {
   creator: string;
 };
 
-const FlowList: React.FC = () => {
+const FlowList: React.FC = (props: any) => {
   const [tableData, setTableData] = useState<TableListItem[]>([]);
 
   const getList = () => {
@@ -57,10 +57,12 @@ const FlowList: React.FC = () => {
     {
       title: 'Action',
       width: 120,
-      render: (_, record) => <a>View Details</a>
+      render: (_, record) => <a onClick={viewDetails}>View Details</a>
     },
   ];
-
+  const viewDetails = () => {
+    props.onChangeTab(1)
+  }
   return (
     <Card>
       <Table

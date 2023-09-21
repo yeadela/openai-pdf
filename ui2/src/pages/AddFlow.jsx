@@ -4,8 +4,7 @@ import AddFlowChart from "../components/flowManage/add/index"
 import { handleData } from '../api/common.api';
 const { TextArea } = Input;
 
-export default function AddFlow() {
-    const [flow, setFlow] = useState();
+export default function AddFlow(props) {
     const flowRef = useRef()
     const getFlow = async () => {
         console.log("getFlow", flowRef.current)
@@ -18,6 +17,6 @@ export default function AddFlow() {
         const { response } = await handleData({ action: "testFlow", data: "" });
     }
     return (
-        <AddFlowChart data={flow} ref={flowRef} />
+        <AddFlowChart {...props} ref={flowRef} />
     )
 }

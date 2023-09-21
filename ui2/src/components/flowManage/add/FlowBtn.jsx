@@ -4,17 +4,17 @@ import { handleData } from '../../../api/common.api';
 const { TextArea } = Input;
 
 export default function FlowBtn(props) {
-    const [flow, setFlow] = useState();
-    const flowRef = useRef()
     const getFlow = async () => {
-        console.log("getFlow", props)
         const { response } = await handleData({ action: "getFlow", data: "" });
-        // if (response) {
-        //     setFlow(response.data);
-        // }
+        if (response) {
+            props.setFlow(response.data);
+        }
     }
     const testFlow = async () => {
         const { response } = await handleData({ action: "testFlow", data: "" });
+    }
+    const saveFlow = async () => {
+        const { response } = await handleData({ action: "saveFlow", data: "" });
     }
     return (
         <div className='filter'>
@@ -29,6 +29,7 @@ export default function FlowBtn(props) {
                 />
                 <Button type="primary" onClick={getFlow}>Create workflow</Button>
                 <Button type="primary" onClick={testFlow}>Test Workflow</Button>
+                <Button type="primary" onClick={saveFlow}>Save Workflow</Button>
             </Space>
         </div>
     )
