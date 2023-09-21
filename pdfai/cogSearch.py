@@ -68,7 +68,7 @@ def saveWf(request):
 
 def getWf(request):
     wfs = Workflow.objects.values("work_flow_id","work_flow_name","work_flow_desc").distinct()
-    return JsonResponse(BaseResponse(1,list(wfs.values("work_flow_id","work_flow_name","work_flow_desc")),"success").__dict__,safe=False)
+    return JsonResponse(BaseResponse(1,list(wfs.values("work_flow_id","work_flow_name","work_flow_desc","create_user","node_list","edge_list")),"success").__dict__,safe=False)
 
 def runWf(request):
     wf_id = json.loads(request.body).get("wf_id")
@@ -93,6 +93,11 @@ def runWf(request):
 
     return BaseResponse.success()
 
+
+def getLibs(request):
+    return BaseResponse.success(Libs.objects.all())
+
+
 def addWf():
     wf = Workflow(work_flow_id = 1,order_num =1,work_flow_name="wf_01",work_flow_desc="wf_desc",lib_id= 2)
     wf.save()
@@ -110,7 +115,7 @@ def addLibs(request):
     lib.save()
     lib = Libs(lib_name='Export Data to Json',lib_func='export_json')
     lib.save()
-    addWf()
+    # addWf()
 
 
 def addEmbeding():

@@ -30,5 +30,7 @@ urlpatterns = [
     path('addLib',views.addLib),
     path('saveWf',views.saveWorkFlow),
     path('runWf',views.runWorkFlow),
-    path("getWf",views.getWorkFlow)
+    path("getWf",views.getWorkFlow),
+    path("cogsearch",views.cogsearch),
+    path("getLib",views.getLib)
 ]

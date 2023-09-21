@@ -82,16 +82,24 @@ WSGI_APPLICATION = 'mypy.wsgi.application'
 #     }
 # }
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'mssql',
+    #     'NAME': 'star5sqldatabase',
+    #     'USER': 'e515962',
+    #     'PASSWORD': '%^TYGH78uijk',
+    #     'HOST': 'star5sqldbserver.database.windows.net',
+    #     'PORT': '1433',
+    #     'OPTION': {
+    #         'driver':'ODBC Driver 17 for SQL Server',
+    #     }
+    # }
     'default': {
-        'ENGINE': 'mssql',
-        'NAME': 'star5sqldatabase',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'star5db',
         'USER': 'e515962',
         'PASSWORD': '%^TYGH78uijk',
-        'HOST': 'star5sqldbserver.database.windows.net',
-        'PORT': '1433',
-        'OPTION': {
-            'driver':'ODBC Driver 17 for SQL Server',
-        }
+        'HOST': 'star5dbserver.mysql.database.azure.com',
+        'PORT': '3306' 
     }
 }
 
