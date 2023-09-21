@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 // import type { ProColumns } from '@ant-design/pro-table';
 // import ProTable from '@ant-design/pro-table';
 import { Card, Table } from 'antd';
+import { getList } from '../../../api/common.api';
 // import { Link } from 'umi';
 
 export type TableListItem = {
@@ -14,45 +15,52 @@ export type TableListItem = {
 const FlowList: React.FC = (props: any) => {
   const [tableData, setTableData] = useState<TableListItem[]>([]);
 
-  const getList = () => {
-    setTableData([
-      {
-        key: 1,
-        name: 'Workflow1',
-        creator: 'user1',
-        createdT: '2022-04-01',
-      },
-      {
-        key: 2,
-        name: 'Workflow2',
-        creator: 'user1',
-        createdT: '2023-04-02',
-      },
-      {
-        key: 3,
-        name: 'Workflow3',
-        creator: 'user2',
-        createdT: '2023-09-03',
-      },
-    ]);
-  };
+  // const getList = () => {0
+  //   setTableData([
+  //     {
+  //       key: 1,
+  //       name: 'Workflow1',
+  //       creator: 'user1',
+  //       createdT: '2022-04-01',
+  //     },
+  //     {
+  //       key: 2,
+  //       name: 'Workflow2',
+  //       creator: 'user1',
+  //       createdT: '2023-04-02',
+  //     },
+  //     {
+  //       key: 3,
+  //       name: 'Workflow3',
+  //       creator: 'user2',
+  //       createdT: '2023-09-03',
+  //     },
+  //   ]);
+  // };
 
-  useEffect(() => {
-    getList();
+  useEffect( () =>  {
+    const func=async ()=>{
+      const {response} = await getList({action:"getWf", filter :""})
+      if(response){
+        setTableData(response.data)
+      }
+    };
+    func();
+    
   }, []);
 
   const columns = [
     {
       title: 'Workflow Name',
-      dataIndex: 'name',
+      dataIndex: 'work_flow_name',
     },
     {
       title: 'Create User',
-      dataIndex: 'creator',
+      dataIndex: 'create_user',
     },
     {
-      title: 'Create Date',
-      dataIndex: 'createdT',
+      title: 'Workflow Description',
+      dataIndex: 'work_flow_desc',
     },
     {
       title: 'Action',
@@ -68,7 +76,7 @@ const FlowList: React.FC = (props: any) => {
       <Table
         columns={columns}
         dataSource={tableData}
-        rowKey="key"
+        rowKey="work_flow_id"
       />
     </Card>
   );
