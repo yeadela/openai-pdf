@@ -63,24 +63,6 @@ export default function FetchData() {
                         ]}
                     />
                 </Form.Item>
-
-                <Form.Item label="Mapping Table:" >
-                    <Select style={{ width: '100%' }}
-                        placeholder="Select a table"
-                        filterOption={filterOption}
-                        options={[
-                            {
-                                value: 'Trade',
-                                label: 'Trade',
-                            },
-                            {
-                                value: 'Order',
-                                label: 'Order',
-                            },
-                        ]}
-                    />
-                </Form.Item>
-
             </Form >
         </ >
     )

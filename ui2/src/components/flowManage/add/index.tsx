@@ -87,6 +87,7 @@ const SmoothTransition = () => {
       const reactFlowBounds = reactFlowWrapper?.current?.getBoundingClientRect();
       const type = event.dataTransfer.getData('application/reactflow');
       const label = event.dataTransfer.getData('application/label');
+      
       console.log('label', label)
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
