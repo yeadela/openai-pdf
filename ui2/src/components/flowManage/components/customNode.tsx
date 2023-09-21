@@ -38,8 +38,8 @@ export default memo(({ data, id, isConnectable }: any) => {
         className="my_handle"
         isConnectable={isConnectable}
       />
-      <Drawer title={typeMap[3].title} placement="right" onClose={() => setOpen(false)} open={open}>
-        {typeMap[3].comp}
+      <Drawer title={typeMap[1].title} placement="right" onClose={() => setOpen(false)} open={open}>
+        {typeMap[1].comp}
       </Drawer>
     </>
   );

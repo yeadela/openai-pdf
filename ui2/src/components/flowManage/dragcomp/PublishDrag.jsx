@@ -13,16 +13,11 @@ export default function PublishDrag() {
                     value={data}
                 />
             </Form.Item>
-            <Form.Item
-                wrapperCol={{
-                    offset: 16,
-                    span: 16,
-                }}
-            >
+            {/* <Form.Item style={{ textAlign: "right" }}>
                 <Button type="primary" htmlType="submit">
                     Save
                 </Button>
-            </Form.Item>
+            </Form.Item> */}
         </Form>
     )
 }
