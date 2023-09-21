@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 // import type { ProColumns } from '@ant-design/pro-table';
 // import ProTable from '@ant-design/pro-table';
-import { Card, Table } from 'antd';
 import { getList } from '../../../api/common.api';
+import { Card, Table, Space } from 'antd';
 // import { Link } from 'umi';
 
 export type TableListItem = {
@@ -64,13 +64,17 @@ const FlowList: React.FC = (props: any) => {
     },
     {
       title: 'Action',
-      width: 120,
-      render: (_, record) => <a onClick={viewDetails}>View Details</a>
+      width: 220,
+      render: (_, record, row) => <Space>
+        <a onClick={() => viewDetails(row)}>View Details</a>
+        <a onClick={() => run(row)}>Run</a></Space>
     },
   ];
-  const viewDetails = () => {
-    props.onChangeTab(1)
+  const viewDetails = (row) => {
+    props.onChangeTab(1);
+    props.setFlow(row);
   }
+  const run = (row) => { }
   return (
     <Card>
       <Table
