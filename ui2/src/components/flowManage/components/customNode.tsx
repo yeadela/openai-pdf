@@ -1,10 +1,12 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import { CloseOutlined } from '@ant-design/icons';
 
 import { Handle } from 'react-flow-renderer';
+import { Drawer } from "antd"
+import { typeMap } from './config';
 
 export default memo(({ data, id, isConnectable }: any) => {
-
+  const [open, setOpen] = useState(true);
 
   return (
     <>
@@ -17,7 +19,7 @@ export default memo(({ data, id, isConnectable }: any) => {
       />
 
       <div className="nodeContent" style={data.style}>
-        <div className="nodelabel" style={{ color: "red" }}>{data.label}</div>
+        <div className="nodelabel" onClick={() => setOpen(true)}>{data.label}</div>
         <div className="close">
           <CloseOutlined
             onClick={(e) => {
@@ -36,6 +38,9 @@ export default memo(({ data, id, isConnectable }: any) => {
         className="my_handle"
         isConnectable={isConnectable}
       />
+      <Drawer title={typeMap[3].title} placement="right" onClose={() => setOpen(false)} open={open}>
+        {typeMap[3].comp}
+      </Drawer>
     </>
   );
 });
