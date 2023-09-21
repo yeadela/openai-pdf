@@ -57,11 +57,12 @@ const FlowList: React.FC = (props: any) => {
     {
       title: 'Action',
       width: 120,
-      render: (_, record) => <a onClick={viewDetails}>View Details</a>
+      render: (_, record, row) => <a onClick={() => viewDetails(row)}>View Details</a>
     },
   ];
-  const viewDetails = () => {
-    props.onChangeTab(1)
+  const viewDetails = (row) => {
+    props.onChangeTab(1);
+    props.setFlow(row);
   }
   return (
     <Card>
