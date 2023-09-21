@@ -37,7 +37,7 @@ def read_file(file,rule_id, table_name):
     return BaseResponse.success()
 
 def mappingtransfer(df,rule_id):
-    df = df.fillna("null-tag")
+    # df = df.fillna("null-tag")
     rm = RuleMapping.objects.filter(rule_id = rule_id)
     columns = df.columns.values.tolist()#list(df)
     new_columns =[]
@@ -52,7 +52,8 @@ def mappingtransfer(df,rule_id):
                             continue
             
                 if item.handler != None:
-                    src_val = row.get(item.source_column) if row.get(item.source_column) !="null-tag" else None
+                    #nan != nan
+                    src_val = row.get(item.source_column) if row.get(item.source_column) ==row.get(item.source_column) else None
                     dest_val = eval(item.handler)(src_val)
                     row[item.source_column] = dest_val
 
