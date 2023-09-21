@@ -5,6 +5,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.vectorstores import Pinecone
 import tiktoken
+import pinecone
 
 #PINECONE_INDEX_NAME = "adela"
 EMBEDDING_MODEL ="text-embedding-ada-002"
@@ -15,6 +16,10 @@ LLM_MODEL = 'gpt-3.5-turbo'
 
 def init():
     print("---initiallizing start---")
+    # pinecone.init(
+    #     api_key="ec70078b-04f8-4d91-8ebc-98ad36e923c1",
+    #     environment="asia-southeast1-gcp-free"
+    # )
     # init for openai(openai embedding, openai chat)
     # os.environ["OPENAI_API_TYPE"] = "azure"
     os.environ["OPENAI_API_KEY"] ="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"
@@ -37,3 +42,7 @@ def init():
     os.environ["STORAGE_ACCOUNT"] =""
     os.environ["STORAGE_CONTAINER"] =""
     os.environ["STORAGE_KEY"] = ""
+
+    #------------recognizer---------
+    os.environ["RECOGNIZER_ENDPOINT"] = "https://star5formrecognizer.cognitiveservices.azure.com"
+    os.environ["RECOGNIZER_KEY"] = "df6d17da3bd343ed865120e4b95b4372"

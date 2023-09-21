@@ -29,5 +29,6 @@ urlpatterns = [
     path('getHandler',views.getHandler),
     path('addLib',views.addLib),
     path('saveWf',views.saveWorkFlow),
-    path('runWf',views.runWorkFlow)
+    path('runWf',views.runWorkFlow),
+    path("getWf",views.getWorkFlow)
 ]

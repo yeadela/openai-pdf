@@ -39,7 +39,7 @@ def addRules(request):
             return BaseResponse.failed("This rule name is existed.")
 
 def editRules(request):
-     ruleList = request.POST['data']
+     ruleList = json.loads(request.body)
      for item in ruleList:
           rm = RuleMapping.objects.get(id = item["id"])
           rm["source"] = item["source"]
@@ -51,8 +51,8 @@ def getRules(request):
      return BaseResponse.success(RuleRfrnc.objects.all())
 
 def getRulesMappingById(request):
-     rule_id = request.POST["id"]
-     return JsonResponse(BaseResponse.success(RuleRfrnc.objects.filter(rule_id)))
+     rule_id = json.loads(request.body).get("rule_id")
+     return BaseResponse.success(RuleMapping.objects.filter(rule_id=rule_id))
 
 def getHandlers(request):
     functionNames = [mh for mh in dir(handle) if callable(getattr(handle, mh))]

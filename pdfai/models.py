@@ -24,7 +24,7 @@ class RuleMapping(models.Model):
 class Trades(models.Model):
     trade_id = models.AutoField(primary_key=True)
     trade_date = models.DateField(max_length=100,null=True)
-    settle_date = models.CharField(max_length=100,null=True)
+    settle_date = models.DateField(max_length=100,null=True)
     transaction_code = models.CharField(max_length=100,null=True)
     asset_name = models.CharField(max_length=100,null=True)
     asset_id = models.CharField(max_length=100,null=True)
@@ -49,6 +49,8 @@ class Workflow(models.Model):
     work_flow_name = models.CharField(max_length=100)
     work_flow_desc = models.CharField(max_length=500, null=True)
     lib_id = models.IntegerField()
+    node_list = models.CharField(max_length=2000,null=True)
+    edge_list = models.CharField(max_length=2000,null=True)
     class Meta:
         db_table = 'work_flow'
 
