@@ -1,11 +1,25 @@
 import React from 'react';
+import { useEffect,useState } from 'react';
+import { getList } from '../../../api/common.api';
 
 export default () => {
+  const [libs,setLibs] = useState([])
   const onDragStart = (event: any, nodeType: any, nodeLabel: any) => {
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.setData('application/label', nodeLabel);
     event.dataTransfer.effectAllowed = 'move';
   };
+  useEffect(()=>{
+    const func=async ()=>{
+      const {response} = await getList({action:"getLib", filter :""})
+      if(response){
+        setLibs(response.data)
+      }
+    };
+    func();
+  }
+  
+  ,[])
 
   return (
     <aside>

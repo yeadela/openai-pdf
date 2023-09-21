@@ -20,7 +20,7 @@ export default function Navigation() {
         data && setData(setData);
     }
     const arr = [
-        { label: "Flow List", icon: <UnorderedListOutlined />, component: <FlowList onChangeTab={onClick} />, title: "Work Flow List" },
+        { label: "Flow List", icon: <UnorderedListOutlined />, component: <FlowList setFlow={(data)=>setData(data)} onChangeTab={onClick} />, title: "Work Flow List" },
         { label: "Add Flow", icon: <NodeIndexOutlined />, component: < AddFlow data={data} />, title: "Work Flow" },
         { label: "Mapping", icon: <ApiOutlined />, component: <RuleManage />, title: "Mapping Rule  Manage" },
         // { label: "Fetch", icon: <VerticalAlignBottomOutlined />, component: <FetchData />, title: "Fetch Data" },
