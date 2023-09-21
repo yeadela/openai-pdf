@@ -67,7 +67,7 @@ export class ChartSettingBoard extends Component {
 
     canDrop(id) {
         const { itemList, activeId, dropConfig } = this.state;
-        if (itemList[activeId].type != dropConfig[id].type) {
+        if (activeId && itemList[activeId].type != dropConfig[id].type) {
             return false;
         }
         return true

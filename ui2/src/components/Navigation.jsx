@@ -1,21 +1,25 @@
 import React, { useState } from 'react'
-import { ApiOutlined, VerticalAlignBottomOutlined, SettingOutlined, DatabaseOutlined, MessageOutlined, FilePdfOutlined, DeliveredProcedureOutlined } from '@ant-design/icons';
+import { ApiOutlined, NodeIndexOutlined, VerticalAlignBottomOutlined, SettingOutlined, DatabaseOutlined, MessageOutlined, FilePdfOutlined, DeliveredProcedureOutlined } from '@ant-design/icons';
 import Config from '../pages/Config';
 import Display from '../pages/Display/index';
 import Header from './Header';
 import RuleManage from '../pages/RuleManage';
 import FetchData from '../pages/FetchData';
+import AddFlow from "../pages/AddFlow"
+import FlowList from "./flowManage/list/index"
 
 export default function Navigation() {
-    // <SettingOutlined />
     const arr = [
+        { label: "Flow List", icon: <NodeIndexOutlined />, component: <FlowList />, title: "Work Flow List" },
+        { label: "Add Flow", icon: <NodeIndexOutlined />, component: < AddFlow />, title: "Work Flow" },
         { label: "Mapping", icon: <ApiOutlined />, component: <RuleManage />, title: "Mapping Rule  Manage" },
-        { label: "Fetch", icon: <VerticalAlignBottomOutlined />, component: <FetchData />, title: "Fetch Data" },
-        { label: "Display", icon: <DatabaseOutlined />, component: <Display />, title: "Data Display", noTitle: true },
-        // { label: "Ask", icon: <MessageOutlined />, component: <Ask />, title: "Data analyze" },
-        { label: "Report", icon: <FilePdfOutlined /> },
-        { label: "Publish", icon: <DeliveredProcedureOutlined /> },
-        { label: "Config", icon: <SettingOutlined />, component: <Config />, title: "System Config" }];
+        // { label: "Fetch", icon: <VerticalAlignBottomOutlined />, component: <FetchData />, title: "Fetch Data" },
+        // { label: "Display", icon: <DatabaseOutlined />, component: <Display />, title: "Data Display", noTitle: true },
+        // // { label: "Ask", icon: <MessageOutlined />, component: <Ask />, title: "Data analyze" },
+        // { label: "Report", icon: <FilePdfOutlined /> },
+        // { label: "Publish", icon: <DeliveredProcedureOutlined /> },
+        // { label: "Config", icon: <SettingOutlined />, component: <Config />, title: "System Config" }
+    ];
     const [activeIndex, setActiveIndex] = useState(0);
     const onClick = (index) => {
         setActiveIndex(index)
