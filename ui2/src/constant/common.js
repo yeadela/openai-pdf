@@ -5,9 +5,9 @@ export const getFileConfig = ({ action, onSucess, data }) => ({
     name: 'file',
     action: action,
     data,
-    // headers: {
-    //     authorization: 'authorization-text',
-    // },
+    headers: {
+        // authorization: 'authorization-text',
+    },
     onChange(info) {
         if (info.file.status !== 'uploading') {
             console.log(info.file, info.fileList);

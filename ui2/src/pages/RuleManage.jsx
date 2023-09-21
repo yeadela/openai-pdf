@@ -19,7 +19,7 @@ export default function RuleManage() {
         {
             title: 'Rule Name',
             dataIndex: 'name',
-            render: (text) => <a onClick={() => openModal("show")}>{text}</a>,
+            render: (text,row) => <a onClick={() => openModal("show")}>{text}</a>,
             defaultSortOrder: 'descend',
             sorter: (a, b) => a.name.localeCompare(b.name),
         },
@@ -61,7 +61,7 @@ export default function RuleManage() {
         {
             title: 'Action',
             key: 'action',
-            render: () => (<a onClick={() => openModal("edit")}> Edit</ a>),
+            render: (text,row) => (<a onClick={() => openModal("edit",row)}> Edit</ a>),
         },
     ];
     useEffect(() => {
