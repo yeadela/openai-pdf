@@ -1,122 +1,149 @@
-import os
-import json
-from langchain.schema import Document
-from azure.core.credentials import AzureKeyCredential
-from azure.search.documents.indexes import SearchIndexClient,SearchIndexerClient # for create index , we did this by portal
-from azure.search.documents import SearchClient
+from .env import init
+from langchain import OpenAI
+from langchain.chat_models import ChatOpenAI
+from langchain.vectorstores import Pinecone
 from langchain.embeddings import OpenAIEmbeddings
-from azure.search.documents.models import Vector
-from azure.search.documents.indexes.models import (
-    IndexingSchedule,
-    SearchIndex,
-    SearchIndexer,
-    SearchIndexerDataContainer,
-    SearchField,
-    SearchFieldDataType,
-    SearchableField,
-    SemanticConfiguration,
-    SimpleField,
-    PrioritizedFields,
-    SemanticField,
-    SemanticSettings,
-    VectorSearch,
-    #VectorSearchAlgorithmConfiguration,
-    SearchIndexerDataSourceConnection
-)
-from formRecognize import generate_embeddings
-from langchain import OpenAI, SQLDatabase
-from langchain_experimental.sql import SQLDatabaseChain
-service_name = "star5search"
-admin_key = "utPRwPzFAkvxgVAUwNXLQL2HhDvZ1QJOM9EiCkRxS4AzSeAknfs0"
+from langchain.chains import RetrievalQA
+from django.http import JsonResponse
+from langchain.document_loaders import PyPDFLoader
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.chains.question_answering import load_qa_chain
+import json
+from . import env
 
-index_name = "star5searchindex1"
+from langchain.vectorstores import AzureSearch
+from langchain.document_loaders import TextLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.embeddings import OpenAIEmbeddings
+import os
+from langchain.vectorstores import Pinecone
+from .env import init
+from .models import Workflow, Libs
+from .baseResponse  import BaseResponse
+from django.db.models import Max
+from .export import *
 
-# Create an SDK client
-endpoint = "https://{0}.search.windows.net/".format(service_name)
+class AppHelper():
 
-def vector_search(query):
-    search_client = SearchClient(endpoint, index_name, AzureKeyCredential(admin_key))  
-    results = search_client.search(  
-        search_text="",  
-        vectors=[Vector(value=generate_embeddings(query), k=3,fields="namevector")],  
-        include_total_count=True, query_type="full",semantic_configuration_name="my-semantic-cfg"
-       # select=["title", "content", "category"] 
-    )
-    return results
-# admin_client = SearchIndexClient(endpoint=endpoint,
-#                       index_name=index_name,
-#                       credential=AzureKeyCredential(admin_key))
-# semantic_config = SemanticConfiguration(
-#     name="my-semantic-config",
-#     prioritized_fields=PrioritizedFields(
-#         title_field=SemanticField(field_name="title"),
-#         prioritized_keywords_fields=[SemanticField(field_name="category")],
-#         prioritized_content_fields=[SemanticField(field_name="content")]
-#     )
-# )
-# semantic_settings = SemanticSettings(configuration=[semantic_config])
+   store = None
+   @classmethod
+   def getStore(cls):
+      if(not cls.store):
+          cls.store = AzureSearch(
+               azure_search_endpoint=os.environ.get("AZURE_SEARCH_ENDPOINT"),
+               azure_search_key=os.environ.get("AZURE_SEARCH_API_KEY"),
+               index_name=os.environ.get("AZURE_SEARCH_INDEX_NAME"),
+               embedding_function=OpenAIEmbeddings().embed_query
+          )
+      return cls.store
 
-# # Create the search index with the semantic settings
-# index = SearchIndex(name=index_name, fields=fields,
-#                     vector_search=vector_search, semantic_settings=semantic_settings)
-# result = index_client.create_or_update_index(index)
-# print(f' {result.name} created')
-# def _create_datasource():
-#     # Here we create a datasource. 
-#     ds_client = SearchIndexerClient(endpoint, AzureKeyCredential(admin_key))
-#     container = SearchIndexerDataContainer(name="AzureServices")
-#     data_source_connection = SearchIndexerDataSourceConnection(
-#         name="cosmosdb-tutorial-indexer", type="cosmosdb", connection_string=cosmosdb_connection_str, container=container
-#     )
-#     data_source = ds_client.create_or_update_data_source_connection(data_source_connection)
-#     return data_source
+def chatWf(request) :
+    question =  request.POST.get["question"]
+    wfs = question.split(",")
+    answer =[]
+    llm = ChatOpenAI(temperature =0.0)
+    chain = load_qa_chain(llm, chain_type="stuff")
+    
+    # query = json.loads(request.body).get("prompt")
+    #"What is the collect stage of data maturity?"
+    for query in wfs:
+        docs = AppHelper.getStore().similarity_search(query)
+        answer.append[chain.run(input_documents=docs,question=query)]
+    print(answer)
+    return JsonResponse({"answer":answer})
 
-# ds_name = _create_datasource().name
+def saveWf(request):
+    params = json.loads(request.body)
+    wf_name = params["wf_name"]
+    wf_desc = params["wf_desc"]
+    libs = params["libs"]
+    max_wf_id = Workflow.objects.aggregate(Max('score'))
+    i = 0
+    for item in libs:
+        i = i +1
+        wf = Workflow(work_flow_id = max_wf_id + 1,order_num =i,work_flow_name=wf_name,work_flow_desc=wf_desc,lib_id= item.lib_id)
+        wf.save()
 
-# indexer = SearchIndexer(
-#         name="cosmosdb-tutorial-indexer",
-#         data_source_name=ds_name,
-#         target_index_name=index_name)
+def runWf(request):
+    wf_id = json.loads(request.body).get("wf_id")
+    if wf_id != None: # run exised work flow
+        qs = Workflow.objects.filter(work_flow_id=wf_id).order_by("order_num")
+        i = 0
+        for wf in qs:
+           lib = Libs.objects.get(lib_id = wf.lib_id)
+           if i==0:
+               previous = eval(lib.lib_func)()
+               i=i+1
+           else:
+               previous=eval(lib.lib_func)(previous)
+    else:
+        libs = json.loads(request.body)["libs"]
+        i =0
+        for lib in libs:
+            if i==0:
+                previous = eval(lib["lib_func"])()
+                i = i +1
+            previous = eval(lib["lib_func"])(previous)
+
+    return BaseResponse.success()
+
+def addWf():
+    wf = Workflow(work_flow_id = 1,order_num =1,work_flow_name="wf_01",work_flow_desc="wf_desc",lib_id= 2)
+    wf.save()
+    wf = Workflow(work_flow_id = 1,order_num =2,work_flow_name="wf_01",work_flow_desc="wf_desc",lib_id= 3)
+    wf.save()
+
+def addLibs(request):
+    lib = Libs(lib_name='Get Data from Excel',lib_func='getDataFromExcel')
+    lib.save()
+    lib = Libs(lib_name='Get Data from Database',lib_func='getDataFromDb')
+    lib.save()
+    lib = Libs(lib_name='Get Data from PDF',lib_func='getDataFromPDF')
+    lib.save()
+    lib = Libs(lib_name='Export Data to Excel',lib_func='export_excel')
+    lib.save()
+    lib = Libs(lib_name='Export Data to Json',lib_func='export_json')
+    lib.save()
+    addWf()
 
 
-# run indexer to get data from db to index
-indexer_client = SearchIndexerClient(endpoint, AzureKeyCredential(admin_key))
-#indexer_client.create_or_update_indexer(indexer)  # create the indexer
+def addEmbeding():
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(file_path, 'explain.txt')
+    loader = TextLoader(base_path)
+    docs = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap = 20)
+    split_docs = text_splitter.split_documents(docs)
+    store = AppHelper.getStore()
+    store.add_documents(split_docs)
 
-result = indexer_client.get_indexer("star5-cosmosdb-indexer")
-print(result)
+def addEmbedingTest():
+    init()
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(file_path, 'explain.txt')
+    loader = TextLoader(base_path)
+    docs = loader.load()
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=100, chunk_overlap = 20)
+    split_docs = text_splitter.split_documents(docs)
+    embed = OpenAIEmbeddings()
+    store = Pinecone.from_documents(split_docs, embed, index_name="adela")
 
-# Run the indexer we just created.
-indexer_client.run_indexer(result.name)
+# addEmbedingTest()
 
-#-------------------------------------
-search_client = SearchClient(endpoint=endpoint,
-                      index_name=index_name,
-                      credential=AzureKeyCredential(admin_key))
-
-#delete index first, then you can create again
-#deleteIndex()
-# results2 = search_client.autocomplete(search_text="shares",suggester_name="testdbtable")
-
-
-results = search_client.search(search_text="name",search_mode='all' filter="keyvalue.shares eq 200",include_total_count=True
-                            #    vector=np.array(OpenAIEmbeddings().embed_query("list all records whose shares > 200"), dtype=np.float32).tolist()
-                               )
-# for result in results2:
-#     print (result['text'],"===",result)
-# print("-------------------------------")
-print ('Total Documents Matching Query:', results)
-for result in results:
-    #print(result)
-    print("{}: {}".format(result["name"], result["shares"]))
-
-
-
-# def deleteIndex():
-#     try:
-#         result = admin_client.delete_index(index_name)
-#         print ('Index', index_name, 'Deleted')
-#     except Exception as ex:
-#         print (ex)
-# for i, item in enumerate(results):
-#     print(i,item)
+def chatWfTest(request):
+    question =  request.GET.get["question"]
+    wfs = question.split(",")
+    answer =[]
+    llm = ChatOpenAI(temperature =0.0)
+    chain = load_qa_chain(llm, chain_type="stuff")
+    
+    # query = json.loads(request.body).get("prompt")
+    #"What is the collect stage of data maturity?"
+    store = Pinecone.from_existing_index(index_name="adela",embedding=OpenAIEmbeddings())
+    for query in wfs:
+        docs = store.similarity_search(query)
+        answer.append[chain.run(input_documents=docs,question=query)]
+    print(answer)
+    return JsonResponse({"answer":answer})

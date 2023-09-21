@@ -3,7 +3,7 @@ from .llmRequest import parseLLMRequest
 from .azureSearch import cognitiveSearch
 from .rules import test1, addRules,getRules,getRulesMappingById, editRules, getHandlers
 from .uploadFile import uploadFiles1, uploadFiles
-from .export import exports
+from .cogSearch import addLibs, saveWf,runWf
 
 # Create your views here.
 def llmRequest(request):
@@ -30,9 +30,17 @@ def uploadFile(request):
 def getHandler(request):
     return getHandlers(request)
 
-def export(request):
-    return exports(request)
+def addLib(request):
+    return addLibs(request)
 
-def test11(request):
-    return test1(request)
+def addLib(request):
+    return addLibs(request)
+
+def saveWorkFlow(request):
+    return saveWf(request)
+
+def runWorkFlow(request):
+    return runWf(request)
+
+
 

@@ -14,8 +14,9 @@ import json
 
 @transaction.atomic
 def addRules(request):
+     #    print ("-----------",request.read())
+        fl = request.FILES.get("file")   
         rule_name = request.POST['rule_name']
-        file = request.POST['file']
         try:
             unique_object = RuleRfrnc.objects.get(rule_name=rule_name)
         except RuleRfrnc.DoesNotExist:
@@ -28,7 +29,7 @@ def addRules(request):
             # file_path = os.path.dirname(os.path.abspath(__file__))
             # base_path = os.path.join(file_path, 'rm.xlsx')
             # df = pd.read_excel(file) 
-            df = pd.read_excel(file)
+            df = pd.read_excel(fl)
             df = df.fillna("null-flag")
             for index, row in df.iterrows(): 
                     rm = RuleMapping(rule_id =rf.rule_id, source_column = row["source"],dest_column = row["destination"], handler = getFieldData(row["handler"]))
@@ -61,11 +62,11 @@ def getHandlers(request):
 def uploadHandlers(request):
     file = request.POST["file"]
     if (file.name.endswith("py")):
-      with open(file,"rb") as f1:
-           content = f1.readlines()
+      with open(file,"r") as f1:
+           content = f1.read()
            file_path = os.path.dirname(os.path.abspath(__file__))
            base_path = os.path.join(file_path, 'handle.py')
-           with open(base_path, 'a') as f:
+           with open(base_path, 'a+') as f:
                 f.write(content)  
     else:
          return BaseResponse.failed("please upload a .py file.")

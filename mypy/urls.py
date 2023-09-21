@@ -20,7 +20,14 @@ from pdfai import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('ask', views.chat),
-    path('summary',views.summarize),
-    path('upload',views.upload)
+    # path('test',views.test11),
+    path('addRule',views.addRule),
+    path('editRule',views.editRules),
+    path('getRule',views.getRules),
+    path('getRulesMapping',views.getRulesMapping),
+    path('uploadFile',views.uploadFile),
+    path('getHandler',views.getHandler),
+    path('addLib',views.addLib),
+    path('saveWf',views.saveWorkFlow),
+    path('runWf',views.runWorkFlow)
 ]
