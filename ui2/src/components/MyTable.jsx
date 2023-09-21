@@ -1,13 +1,14 @@
 import React, { useState, useEffect, useImperativeHandle, useRef, forwardRef } from 'react'
 import { Button, Input, Select, Popconfirm } from "antd"
-const options1 = [{
-    value: 'func1',
-    label: 'func1',
-},
-{
-    value: 'func2',
-    label: 'func2',
-}]
+import { getList } from '../api/common.api'
+// const options1 = [{
+//     value: 'func1',
+//     label: 'func1',
+// },
+// {
+//     value: 'func2',
+//     label: 'func2',
+// }]
 const MyTable = (props, ref) => {
     useImperativeHandle(ref, () => ({
         data
@@ -17,7 +18,20 @@ const MyTable = (props, ref) => {
     const [data, setData] = useState([]);
     const [count, setCount] = useState(1);
     useEffect(() => {
-        type !== "show" && setOptions(options1)
+        if (type !== "show"){
+            getList({action:"getHandler"}).then(
+                res=>{
+                    const {data} = res.response
+                    console.log("----",data)
+                    let opt = []
+                    data.forEach(item=>{
+                        opt.push({value:item,label:item})
+                    })
+                    setOptions(opt)
+                }
+            )
+            
+        }
         setData(sourceData)
     }, []);
     const handleChange = (e, index, type) => {
@@ -43,9 +57,9 @@ const MyTable = (props, ref) => {
                     {type !== "show" && <div className='action'>Action</div>}
                 </li>
                 {data.map((item, index) => <li className='item' key={index}>
-                    <div className='source'>{type === "show" ? item.source : <Input value={item.source} onChange={(e) => handleChange(e, index, "source")} />}</div>
-                    <div className='dest'>{type === "show" ? item.dest : <Input value={item.dest} onChange={(e) => handleChange(e, index, "dest")} />}</div>
-                    <div className='handle'>{type === "show" ? item.handle : <Select value={item.handle}
+                    <div className='source'>{type === "show" ? item.source_column : <Input value={item.source_column} onChange={(e) => handleChange(e, index, "source")} />}</div>
+                    <div className='dest'>{type === "show" ? item.dest_column : <Input value={item.dest_column} onChange={(e) => handleChange(e, index, "dest")} />}</div>
+                    <div className='handle'>{type === "show" ? item.handler : <Select value={item.handler}
                         style={{ width: 120, }}
                         onChange={(v) => handleChange(v, index, "handle")}
                         options={options} />}</div>

@@ -1,4 +1,3 @@
-import sqlite3  
 import pandas as pd  
 import matplotlib.pyplot as plt  
 from matplotlib.backends.backend_pdf import PdfPages  
@@ -8,8 +7,16 @@ import json
 from reportlab.pdfgen import canvas  
 from reportlab.lib.pagesizes import letter  
 from django.db import connection
+from .uploadFile import mappingtransfer
+from langchain.tools.azure_cognitive_services.form_recognizer import AzureCogsFormRecognizerTool
+from azure.storage.blob import BlobServiceClient,BlobClient
+
+from azure.ai.formrecognizer import DocumentAnalysisClient
+from azure.core.credentials import AzureKeyCredential
+import os
+from PIL import Image
   
-def getDataFromDb(query=None):  
+def getDataFromDb(query=None, rule_id=None):  
     # 连接到SQLite数据库  
     # conn = sqlite3.connect(db_path)  
     cursor = connection.cursor()  
@@ -23,7 +30,9 @@ def getDataFromDb(query=None):
   
     # 将结果转换为DataFrame  
     df = pd.DataFrame(results, columns=[column[0] for column in cursor.description])  
-  
+    rule_id = 9
+    if rule_id != None:
+        df = mappingtransfer(df,rule_id)
     # 将DataFrame保存为Excel文件  
     # df.to_excel(target_path, index=False)  
   
@@ -31,8 +40,36 @@ def getDataFromDb(query=None):
     connection.close()  
     return df
 
+def getDataFromExcel(file_name="data.xlsx"):
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(file_path, file_name)
+    return  pd.read_excel(base_path)
 
-def export_excel(df,target_path='share.xlsx'):
+def getDataFromImages(file_name="test.pdf"):
+    file_path = os.path.dirname(os.path.abspath(__file__))
+    base_path = os.path.join(file_path, file_name)
+    
+    filename = "Trades.jpg"
+
+    #store file to blob storage
+    storage_account_url = f'https://{os.environ.get("STORAGE_ACCOUNT")}.blob.core.windows.net'
+    
+    storage_container = os.environ.get("STORAGE_CONTAINER")
+   
+    doc_analysis_client = DocumentAnalysisClient(
+                    endpoint=os.environ.get("RECOGNIZER_ENDPOINT"),#"form recognizer endpoin",
+                    credential=AzureKeyCredential(os.environ.get("RECOGNIZER_KEY")),
+                )
+
+    poller = doc_analysis_client.begin_analyze_document_from_url(
+                "prebuilt-document", document_url = f'{storage_account_url}/{storage_container}/' + filename)
+        
+
+    result = poller.result()
+    res_dict = [item.to_dict() for item in result.key_value_pairs]
+    return pd.DataFrame.from_dict(res_dict)
+
+def export_excel(df,target_path='share1.xlsx'):
     df.to_excel(target_path, index=False)  
 
 

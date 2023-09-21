@@ -59,12 +59,16 @@ def saveWf(request):
     wf_name = params["wf_name"]
     wf_desc = params["wf_desc"]
     libs = params["libs"]
-    max_wf_id = Workflow.objects.aggregate(Max('score'))
+    max_wf_id = Workflow.objects.aggregate(Max('work_flow_id'))
     i = 0
     for item in libs:
         i = i +1
         wf = Workflow(work_flow_id = max_wf_id + 1,order_num =i,work_flow_name=wf_name,work_flow_desc=wf_desc,lib_id= item.lib_id)
         wf.save()
+
+def getWf(request):
+    wfs = Workflow.objects.values("work_flow_id","work_flow_name","work_flow_desc").distinct()
+    return JsonResponse(BaseResponse(1,list(wfs.values("work_flow_id","work_flow_name","work_flow_desc")),"success").__dict__,safe=False)
 
 def runWf(request):
     wf_id = json.loads(request.body).get("wf_id")
@@ -100,7 +104,7 @@ def addLibs(request):
     lib.save()
     lib = Libs(lib_name='Get Data from Database',lib_func='getDataFromDb')
     lib.save()
-    lib = Libs(lib_name='Get Data from PDF',lib_func='getDataFromPDF')
+    lib = Libs(lib_name='Get Data from Image',lib_func='getDataFromImages')
     lib.save()
     lib = Libs(lib_name='Export Data to Excel',lib_func='export_excel')
     lib.save()

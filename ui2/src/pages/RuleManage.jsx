@@ -18,17 +18,17 @@ export default function RuleManage() {
     const columns = [
         {
             title: 'Rule Name',
-            dataIndex: 'name',
+            dataIndex: 'rule_name',
             render: (text) => <a onClick={() => openModal("show")}>{text}</a>,
             defaultSortOrder: 'descend',
-            sorter: (a, b) => a.name.localeCompare(b.name),
+            sorter: (a, b) => a.rule_name.localeCompare(b.rule_name),
         },
         {
-            title: 'Descripe',
-            dataIndex: 'describ',
+            title: 'Description',
+            dataIndex: 'rule_description',
             width: 400,
             defaultSortOrder: 'descend',
-            sorter: (a, b) => a.describ.localeCompare(b.describ),
+            sorter: (a, b) => a.rule_description.localeCompare(b.rule_description),
             ellipsis: {
                 showTitle: false,
             },
@@ -61,7 +61,7 @@ export default function RuleManage() {
         {
             title: 'Action',
             key: 'action',
-            render: () => (<a onClick={() => openModal("edit")}> Edit</ a>),
+            render: (text, row) => (<a onClick={() => openModal("edit",row)}> Edit</ a>),
         },
     ];
     useEffect(() => {
@@ -70,25 +70,25 @@ export default function RuleManage() {
     }, [])
     const getData = async () => {
         setLoading(true);
-        const { response } = await getList({ action: "request", filter });
-        // if (response) {
-        //     setLoading(false);
-        //     setData(response.data);
-        // }
-        setTimeout(() => {
+        const { response } = await getList({ action: "getRule", filter });
+        if (response) {
             setLoading(false);
-            let data = []
-            for (let i = 0; i < 100; i++) {
-                data.push({
-                    key: i,
-                    name: `order rule ${i}`,
-                    describ: `London, Park Lane no. ${i} 1111111111111111`,
-                    tags: ['default']
-                });
-            }
-            // tags: ['user config'],
-            setData(data);
-        }, 100)
+            setData(response.data);
+        }
+        // setTimeout(() => {
+        //     setLoading(false);
+        //     let data = []
+        //     for (let i = 0; i < 100; i++) {
+        //         data.push({
+        //             key: i,
+        //             name: `order rule ${i}`,
+        //             describ: `London, Park Lane no. ${i} 1111111111111111`,
+        //             tags: ['default']
+        //         });
+        //     }
+        //     // tags: ['user config'],
+        //     setData(data);
+        // }, 100)
     }
     const onSearch = (e) => {
         setFilter(e.target.value);
@@ -110,10 +110,16 @@ export default function RuleManage() {
     const handleCancel = () => {
         setOpen(false);
     };
-    const openModal = (type) => {
+    const openModal = async (type,row) => {
         setType(type);
         setOpen(true);
-        type !== "add" ? setModalData(data1) : setModalData([]);
+        if( type !== "add"){
+            const { response } = await getList({ action: "getRulesMapping", filter:{rule_id:row.rule_id} });
+            setModalData(response.data);
+        } else {
+            setModalData([]);
+        }
+
     }
     const onSuccess = () => {
         console.log("after upload success")
@@ -123,7 +129,7 @@ export default function RuleManage() {
         <>
             <div className='filter'>
                 <Search placeholder="input rule name" onSearch={onSearch} enterButton />
-                <Upload {...getFileConfig({ action: "request", onSuccess })}>
+                <Upload {...getFileConfig({ action: "/api/addRule", onSuccess,data:{rule_name:"db_rule"}})}>
                     <Button icon={<UploadOutlined />}>Upload Rule</Button>
                 </Upload>
                 <Button type="primary" icon={<PlusOutlined />} onClick={() => openModal("add")}>
